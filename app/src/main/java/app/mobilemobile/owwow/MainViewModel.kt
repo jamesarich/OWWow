@@ -14,6 +14,8 @@ class MainViewModel : ViewModel() {
     private val api: OWWowService = OWWowApi.retrofitService
 
     var wows: List<Wow> by mutableStateOf(listOf())
+    lateinit var clickedWow: Wow
+
 
     init {
         fetchWows()
@@ -27,5 +29,9 @@ class MainViewModel : ViewModel() {
 
     companion object {
         private const val NUM_WOWS = 25
+    }
+
+    fun onWowClicked(wow: Wow){
+        clickedWow = wow
     }
 }

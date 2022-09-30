@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import app.mobilemobile.owwow.data.Video
 import app.mobilemobile.owwow.data.Wow
 import app.mobilemobile.owwow.ui.theme.OWWowTheme
@@ -30,17 +35,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
+
             OWWowTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val listState = rememberLazyListState()
-                    LazyColumn(state = listState) {
-                        itemsIndexed(mainViewModel.wows) { _, wow ->
-                            WowCard(wow)
-                        }
+                NavHost(navController = navController, startDestination = "wowList") {
+                    composable("wowList") {
+                        WowList(mainViewModel = mainViewModel, navController = navController)
+                    }
+                    composable("wowDetail") {
+                        WowDetail(wow = mainViewModel.clickedWow)
                     }
                 }
             }
@@ -50,12 +53,51 @@ class MainActivity : ComponentActivity() {
 
 @Suppress("FunctionNaming")
 @Composable
-fun WowCard(wow: Wow) {
+fun WowDetail(wow: Wow) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column {
+            Text(text = wow.movie)
+            Text(text = wow.character)
+            Text(text = wow.fullLine)
+        }
+    }
+}
+
+@Suppress("FunctionNaming")
+@Composable
+fun WowList(mainViewModel: MainViewModel, navController: NavController) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        val listState = rememberLazyListState()
+        LazyColumn(state = listState) {
+            itemsIndexed(mainViewModel.wows) { _, wow ->
+                WowCard(wow, mainViewModel::onWowClicked, navController)
+            }
+        }
+    }
+}
+
+@Suppress("FunctionNaming")
+@Composable
+fun WowCard(
+    wow: Wow,
+    onWowClicked: (wow: Wow) -> Unit,
+    navController: NavController
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(8.dp)
+            .clickable {
+                onWowClicked(wow)
+                navController.navigate("wowDetail")
+            }
     ) {
         Column(
             modifier = Modifier
@@ -94,6 +136,7 @@ fun DefaultPreview() {
         audio = "audio"
     )
     OWWowTheme {
-        WowCard(testWow)
+        val navController = rememberNavController()
+        WowCard(testWow, {}, navController)
     }
 }
