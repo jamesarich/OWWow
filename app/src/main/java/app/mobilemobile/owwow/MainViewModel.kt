@@ -28,7 +28,7 @@ class MainViewModel : ViewModel() {
     }
 
     companion object {
-        private const val NUM_WOWS = 25
+        private const val NUM_WOWS = 5
     }
 
     fun onWowClicked(wow: Wow){
