@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import app.mobilemobile.owwow.data.Video
 import app.mobilemobile.owwow.data.Wow
 import app.mobilemobile.owwow.ui.theme.OWWowTheme
@@ -34,10 +33,11 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Suppress("FunctionNaming")
 @Composable
-fun WowList(wows: List<Wow>, onWowClicked: (wow: Wow) -> Unit, onSiteButtonClicked: () -> Unit, listState: LazyListState) {
+fun WowList(wows: List<Wow>, onWowClicked: (wow: Wow) -> Unit, onSiteButtonClicked: () -> Unit) {
+    val listState = rememberLazyListState()
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
     ) {
         LazyColumn(
             state = listState
@@ -124,8 +124,11 @@ fun WowCard(
         ) {
             GlideImage(
                 imageModel = wow.poster,
-                imageOptions = ImageOptions(contentScale = ContentScale.Fit),
-                modifier = Modifier.fillMaxWidth()
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.Fit,
+                    contentDescription = "Movie poster for ${wow.movie}"
+                ),
+                modifier = Modifier.fillMaxWidth(),
             )
             Text(text = wow.movie, style = Typography.titleMedium)
             Text(text = "Wow ${wow.currentWowInMovie} of ${wow.totalWowsInMovie}")

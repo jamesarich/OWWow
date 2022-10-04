@@ -33,7 +33,6 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
 import app.mobilemobile.owwow.data.Wow
 import app.mobilemobile.owwow.ui.theme.OWWowTheme
-import app.mobilemobile.owwow.ui.theme.Typography
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -58,7 +57,10 @@ fun WowDetail(wow: Wow) {
             ) {
                 Column {
                     VideoPlayer(uri = Uri.parse(wow.video.quality480p))
-                    Row(modifier = Modifier.padding(8.dp)) {
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         GlideImage(
                             imageModel = wow.poster,
                             imageOptions = ImageOptions(contentScale = ContentScale.Fit),

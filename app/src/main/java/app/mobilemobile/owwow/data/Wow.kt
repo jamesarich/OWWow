@@ -4,29 +4,29 @@ import com.google.gson.annotations.SerializedName
 
 data class Wow(
     @SerializedName("movie")
-    val movie: String,
+    var movie: String,
     @SerializedName("year")
-    val year: Int,
+    var year: Int,
     @SerializedName("release_date")
-    val releaseDate: String,
+    var releaseDate: String,
     @SerializedName("director")
-    val director: String,
+    var director: String,
     @SerializedName("character")
-    val character: String,
+    var character: String,
     @SerializedName("movie_duration")
-    val movieDuration: String,
+    var movieDuration: String,
     @SerializedName("timestamp")
-    val timestamp: String,
+    var timestamp: String,
     @SerializedName("full_line")
-    val fullLine: String,
+    var fullLine: String,
     @SerializedName("current_wow_in_movie")
-    val currentWowInMovie: Int,
+    var currentWowInMovie: Int,
     @SerializedName("total_wows_in_movie")
-    val totalWowsInMovie: Int,
+    var totalWowsInMovie: Int,
     @SerializedName("poster")
-    val poster: String,
+    var poster: String,
     @SerializedName("video")
-    val video: Video,
+    var video: Video,
     @SerializedName("audio")
-    val audio: String
+    var audio: String,
 )
