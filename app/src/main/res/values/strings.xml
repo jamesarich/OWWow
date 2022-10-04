@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">OWWow</string>
+    <string name="disclaimer">Disclaimer: This app is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Owen Wilson, or any of his subsidiaries or affiliates. All motion pictures, products, and brands mentioned on this website are the respective trademarks and copyrights of their owners.</string>
+    <string name="visit_site">Visit Site</string>
+    <string name="footer_text">This app is utilizing The Owen Wilson Wow API.</string>
+    <string name="header_text">A random set of Owen Wilson\'s wow exclamations in movies.</string>
+    <string name="wow">WOW!</string>
 </resources>

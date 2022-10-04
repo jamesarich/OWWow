@@ -6,7 +6,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,7 +19,6 @@ import app.mobilemobile.owwow.ui.views.WowDetail
 import app.mobilemobile.owwow.ui.views.WowList
 
 class MainActivity : ComponentActivity() {
-    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             MainContent(
                 navController = navController,
-                mainViewModel = mainViewModel,
                 siteButtonClicked = { siteButtonClicked() })
         }
     }
@@ -40,17 +41,18 @@ class MainActivity : ComponentActivity() {
 
 }
 
+@Suppress("FunctionNaming")
 @Composable
 fun MainContent(
     navController: NavHostController,
-    mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel = viewModel(),
     siteButtonClicked: () -> Unit
 ) {
     OWWowTheme {
         NavHost(navController = navController, startDestination = "wowList") {
             composable("wowList") {
                 WowList(
-                    wows = mainViewModel.wows,
+                    viewModel = mainViewModel,
                     onWowClicked = { wow ->
                         mainViewModel.onWowClicked(wow)
                         navController.navigate("wowDetail")
@@ -59,7 +61,7 @@ fun MainContent(
                 )
             }
             composable("wowDetail") {
-                WowDetail(wow = mainViewModel.clickedWow)
+                WowDetail(viewModel = mainViewModel)
             }
         }
     }

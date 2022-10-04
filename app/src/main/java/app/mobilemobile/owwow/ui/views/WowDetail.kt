@@ -19,10 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -31,7 +33,8 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
-import app.mobilemobile.owwow.data.Wow
+import app.mobilemobile.owwow.MainViewModel
+import app.mobilemobile.owwow.R
 import app.mobilemobile.owwow.ui.theme.OWWowTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -39,16 +42,17 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Suppress("FunctionNaming")
 @Composable
-fun WowDetail(wow: Wow) {
+fun WowDetail(viewModel: MainViewModel = viewModel()) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
+        val wow = viewModel.clickedWow
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "WOW!", fontSize = 96.sp)
+            Text(text = stringResource(R.string.wow), fontSize = 96.sp)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,6 +84,7 @@ fun WowDetail(wow: Wow) {
 }
 
 
+@Suppress("FunctionNaming")
 @Composable
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 fun VideoPlayer(uri: Uri) {
@@ -119,10 +124,11 @@ fun VideoPlayer(uri: Uri) {
 }
 
 
+@Suppress("FunctionNaming")
 @Preview
 @Composable
 fun WowDetailPreview() {
     OWWowTheme {
-        WowDetail(wow = testWow)
+        WowDetail(viewModel())
     }
 }
