@@ -6,7 +6,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import junit.framework.Assert.assertEquals
@@ -23,7 +22,7 @@ class NavigationTest {
         composeTestRule.setContent {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
-            MainContent(navController = navController, viewModel(), {})
+            MainContent(navController = navController, MainViewModel(), {})
         }
     }
 
@@ -31,7 +30,7 @@ class NavigationTest {
     @Test
     fun appNavHost_verifyStartDestination() {
         setupAppNavHost()
-        composeTestRule.onNodeWithText("A random set of Owen Wilson's \"wow\" exclamations in movies.")
+        composeTestRule.onNodeWithText("A random set", substring = true, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
@@ -39,8 +38,8 @@ class NavigationTest {
     fun appNavHost_verifyWowDetailDestination() {
         setupAppNavHost()
         composeTestRule.onAllNodesWithContentDescription(
-                "Movie poster", substring = true, useUnmergedTree = true
-            )[0].performClick()
+            "Movie poster", substring = true, useUnmergedTree = true
+        )[0].performClick()
         val route = navController.currentBackStackEntry?.destination?.route
         assertEquals(route, "wowDetail")
     }
