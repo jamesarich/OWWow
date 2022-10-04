@@ -13,43 +13,72 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import app.mobilemobile.owwow.MainViewModel
+import app.mobilemobile.owwow.R
 import app.mobilemobile.owwow.data.Video
 import app.mobilemobile.owwow.data.Wow
 import app.mobilemobile.owwow.ui.theme.OWWowTheme
 import app.mobilemobile.owwow.ui.theme.Typography
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.launch
 
 
-@Suppress("FunctionNaming")
+@OptIn(ExperimentalMaterial3Api::class)
+@Suppress("FunctionNaming", "CoroutineCreationDuringComposition")
 @Composable
-fun WowList(wows: List<Wow>, onWowClicked: (wow: Wow) -> Unit, onSiteButtonClicked: () -> Unit) {
+fun WowList(
+    viewModel: MainViewModel = viewModel(),
+    onWowClicked: (wow: Wow) -> Unit,
+    onSiteButtonClicked: () -> Unit
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-    ) {
-        LazyColumn(
-            state = listState
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            color = MaterialTheme.colorScheme.background,
         ) {
-            item {
-                Header()
+            LazyColumn(
+                state = listState
+            ) {
+                item {
+                    Header()
+                }
+                itemsIndexed(viewModel.wows) { _, wow ->
+                    WowCard(wow, onWowClicked)
+                }
+                item {
+                    Footer(onSiteButtonClicked)
+                }
             }
-            itemsIndexed(wows) { _, wow ->
-                WowCard(wow, onWowClicked)
-            }
-            item {
-                Footer(onSiteButtonClicked)
+        }
+        if (!viewModel.error.isNullOrEmpty()) {
+            scope.launch {
+                snackbarHostState.showSnackbar(viewModel.error ?: "An Error Occurred")
             }
         }
     }
@@ -60,7 +89,7 @@ fun WowList(wows: List<Wow>, onWowClicked: (wow: Wow) -> Unit, onSiteButtonClick
 fun Header() {
     Text(
         modifier = Modifier.padding(8.dp),
-        text = "A random set of Owen Wilson's \"wow\" exclamations in movies.",
+        text = stringResource(R.string.header_text),
         style = Typography.titleLarge,
         textAlign = TextAlign.Center
     )
@@ -80,7 +109,7 @@ fun Footer(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "This app is utilizing The Owen Wilson Wow API.",
+            stringResource(R.string.footer_text),
             style = Typography.bodySmall,
             textAlign = TextAlign.Center
         )
@@ -90,10 +119,10 @@ fun Footer(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text(text = "Visit Site")
+            Text(text = stringResource(R.string.visit_site))
         }
         Text(
-            "Disclaimer: This app is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Owen Wilson, or any of his subsidiaries or affiliates. All motion pictures, products, and brands mentioned on this website are the respective trademarks and copyrights of their owners.",
+            text = stringResource(R.string.disclaimer),
             style = Typography.bodySmall,
             textAlign = TextAlign.Justify
         )
